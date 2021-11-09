@@ -11,7 +11,7 @@ services:
         networks:
             - persistent_network
 
-    # version control of your nifi flows
+    # version control for nifi flows
     registry:
         hostname: myregistry
         container_name: registry_container_persistent
@@ -20,9 +20,9 @@ services:
             - "18080:18080"
         environment:
             - LOG_LEVEL=INFO
-            - NIFI_REGISTRY_DB_DIR=/opt/nifi-registry/database
+            - NIFI_REGISTRY_DB_DIR=/opt/nifi-registry/nifi-registry-current/database
             - NIFI_REGISTRY_FLOW_PROVIDER=file
-            - NIFI_REGISTRY_FLOW_STORAGE_DIR=/opt/nifi-registry/flow_storage
+            - NIFI_REGISTRY_FLOW_STORAGE_DIR=/opt/nifi-registry/nifi-registry-current/flow_storage
         volumes:
             - ./nifi_registry/database:/opt/nifi-registry/nifi-registry-current/database
             - ./nifi_registry/flow_storage:/opt/nifi-registry/nifi-registry-current/flow_storage
@@ -41,7 +41,7 @@ services:
             - NIFI_CLUSTER_IS_NODE=true
             - NIFI_CLUSTER_NODE_PROTOCOL_PORT=8082
             - NIFI_ZK_CONNECT_STRING=myzookeeper:2181
-            - NIFI_ELECTION_MAX_WAIT=1 min
+            - NIFI_ELECTION_MAX_WAIT=30 sec
             - NIFI_SENSITIVE_PROPS_KEY='12345678901234567890A'
         restart: on-failure
         healthcheck:

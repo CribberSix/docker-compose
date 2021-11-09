@@ -1,21 +1,21 @@
 version: "3"
 services:
-    # the configuration manager for NiFi
+    # configuration manager for NiFi
     zookeeper:
         hostname: myzookeeper
         container_name: zookeeper_container_persistent
-        image: 'bitnami/zookeeper:3.7.0'  # latest image as of 2021-11-08.
+        image: 'bitnami/zookeeper:3.7.0'  # latest image as of 2021-11-09.
         environment:
             - ALLOW_ANONYMOUS_LOGIN=yes
         restart: always
         networks:
-            - persistent_network
+            - my_persistent_network
 
     # version control for nifi flows
     registry:
         hostname: myregistry
         container_name: registry_container_persistent
-        image: 'apache/nifi-registry:1.15.0'
+        image: 'apache/nifi-registry:1.15.0'  # latest image as of 2021-11-09.
         ports:
             - "18080:18080"
         environment:
@@ -27,13 +27,13 @@ services:
             - ./nifi_registry/database:/opt/nifi-registry/nifi-registry-current/database
             - ./nifi_registry/flow_storage:/opt/nifi-registry/nifi-registry-current/flow_storage
         networks:
-            - persistent_network
+            - my_persistent_network
 
     # data extraction, transformation and load service
     nifi:
         hostname: mynifi
         container_name: nifi_container_persistent
-        image: 'apache/nifi:1.14.0'  # latest image as of 2021-11-08.
+        image: 'apache/nifi:1.14.0'  # latest image as of 2021-11-09.
         ports:
             - '8091:8080'
         environment:
@@ -60,10 +60,10 @@ services:
             # uncomment the next line after copying the /conf directory from the container to your local directory to persist NiFi flows
             #- ./nifi/conf:/opt/nifi/nifi-current/conf
         networks:
-            - persistent_network
+            - my_persistent_network
 
 
 networks:
-  persistent_network:
+  my_persistent_network:
     driver: bridge
 

@@ -5,9 +5,9 @@ services:
         hostname: myzookeeper
         container_name: zookeeper_container_persistent
         image: 'bitnami/zookeeper:3.7.0'  # latest image as of 2021-11-09.
+        restart: on-failure
         environment:
             - ALLOW_ANONYMOUS_LOGIN=yes
-        restart: always
         networks:
             - my_persistent_network
 
@@ -16,6 +16,7 @@ services:
         hostname: myregistry
         container_name: registry_container_persistent
         image: 'apache/nifi-registry:1.15.0'  # latest image as of 2021-11-09.
+        restart: on-failure
         ports:
             - "18080:18080"
         environment:
@@ -34,6 +35,7 @@ services:
         hostname: mynifi
         container_name: nifi_container_persistent
         image: 'apache/nifi:1.14.0'  # latest image as of 2021-11-09.
+        restart: on-failure
         ports:
             - '8091:8080'
         environment:
@@ -43,7 +45,6 @@ services:
             - NIFI_ZK_CONNECT_STRING=myzookeeper:2181
             - NIFI_ELECTION_MAX_WAIT=30 sec
             - NIFI_SENSITIVE_PROPS_KEY='12345678901234567890A'
-        restart: on-failure
         healthcheck:
             test: "${DOCKER_HEALTHCHECK_TEST:-curl localhost:8091/nifi/}"
             interval: "60s"
